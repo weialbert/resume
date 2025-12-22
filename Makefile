@@ -18,10 +18,15 @@ build/resume.pdf: build/resume.typ
 	gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sPAPERSIZE=letter -dFIXEDMEDIA -dPDFFitPage -sOutputFile=$@ build/resume-raw.pdf
 	@rm -f build/resume-raw.pdf
 
-.PHONY: all md pdf clean
-md: build/resume.md
+.PHONY: all setup md pdf clean
 
-pdf: build/resume.pdf
+setup:
+	@echo "Ensuring Python deps (PyYAML, Jinja2) are installed to user site"
+	$(PY) -m pip install --user PyYAML Jinja2
+
+md: setup build/resume.md
+
+pdf: setup build/resume.pdf
 
 clean:
 	rm -rf build/*.md build/*.typ build/*.pdf
