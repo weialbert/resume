@@ -1,0 +1,192 @@
+# 
+profiles:
+  onepage:
+    min_importance: 4
+    max_bullets_per_experience: 3
+    include_tags: null
+    exclude_tags: null
+
+  default:
+    min_importance: 1
+    max_bullets_per_experience: 10
+    include_tags: null
+    exclude_tags: null
+
+
+config:
+  max_bullet_length: 500
+
+
+personal:
+  name: "Albert Wei"
+  location: "Ann Arbor, MI"
+  email: "alwei@umich.edu"
+  phone: "(203) 529-7086"
+  linkedin: "linkedin.com/in/albert--wei"
+  github: "github.com/albert--wei"
+  portfolio: ""
+
+
+education:
+  - institution: "University of Michigan"
+    location: "Ann Arbor, MI"
+    degree: "MSE Industrial & Operations Engineering – Operations Research; BSE Industrial & Operations Engineering; Minor: Computer Science Engineering"
+    start: 2018-09
+    end: 2022-06
+    gpa: "3.9 – Summa Cum Laude"
+    awards:
+      - "Dean's List (2018–2022)"
+      - "University Honors"
+      - "James B. Angell Scholar"
+
+
+experiences:
+  - id: capital-one
+    company: Capital One
+    role: Senior Data Analyst
+    location: McLean, VA
+    start: 2021-01
+    end: present
+    tags: [data-engineering, leadership]
+    bullets:
+      - id: co-b1
+        text: Owned US Card complaints data pipeline (Snowflake SQL and Python), migrated data source to S3 enabling real time updates, reduced dataset query time from 300 to 1 seconds, and oversaw change management for 100+ analysts onto production system serving SVP+ leadership
+        importance: 5
+        tags: [data-engineering]
+      - id: co-b2
+        text: Refactored legacy retail bank overdraft risk model monitoring pipeline, combining 8 data sources and optimizing runtime from 4+ hours to 20 minutes through parallelization
+        importance: 5
+        tags: [performance]
+      - id: co-b3
+        text: Built central data quality framework using Python and Apache Airflow, eliminating 20+ organization-wide adhoc solutions and enabling advanced statistical trend analysis capabilities with scalable infrastructure supporting 70+ production datasets
+        importance: 4
+        tags: [data-engineering]
+      - id: co-b4
+        text: Led federal Community Reinvestment Act (CRA) compliance data strategy coordinating cross-functional teams and delivering regulatory submissions to US Treasury OCC
+        importance: 4
+        tags: [leadership, compliance]
+      - id: co-b5
+        text: Designed and implemented intelligent real-time recoveries analytics infrastructure using Airflow, Apache Hamilton, and Snowflake supporting $10M+ core business decision-making
+        importance: 4
+        tags: [architecture]
+      - id: co-b6
+        text: Developed self-service customer inquiry dashboard using Tableau and SQL, reducing manual support requests and streamlining associate workflows
+        importance: 3
+        tags: [product, visualization]
+      - id: co-b7
+        text: Led A/B testing initiatives using Python, SQL, and internal experimentation platforms achieving >10% engagement improvements in direct mail campaigns across 10,000+ cases monthly
+        importance: 3
+        tags: [analytics]
+
+  - id: umich-tri
+    company: University of Michigan – Transportation Research Institute
+    role: Research Scientist & First Author
+    location: Ann Arbor, MI
+    start: 2018-01
+    end: 2021-12
+    tags: [research]
+    bullets:
+      - id: tri-b1
+        text: Published peer-reviewed first-author paper on parametric head geometry modeling using PCA and multivariate linear regression in MATLAB
+        importance: 4
+        tags: [research, publication]
+      - id: tri-b2
+        text: Automated landmark and feature extraction from 1,000+ CT images with ML-based radial basis functions and cubic spline interpolation
+        importance: 3
+        tags: [automation]
+      - id: tri-b3
+        text: Managed 10+ cross-functional researchers on feature engineering and data curation using MATLAB data processing pipelines
+        importance: 3
+        tags: [leadership]
+
+  - id: investment-metrics
+    company: Investment Metrics
+    role: Data Products Intern
+    location: Norwalk, CT
+    start: 2020-06
+    end: 2021-08
+    tags: [internship]
+    bullets:
+      - id: im-b1
+        text: Built predictive models analyzing ESG factor impact on portfolio performance using Python and R
+        importance: 2
+        tags: [modeling]
+      - id: im-b2
+        text: Created interactive dashboards for executive decision-making using Tableau and Plotly
+        importance: 2
+        tags: [visualization]
+
+  - id: umich-gsi
+    company: University of Michigan – College of Engineering
+    role: Graduate Student Instructor / Instructional Assistant - Lean Manufacturing
+    location: Ann Arbor, MI
+    start: 2020-01
+    end: 2022-06
+    tags: [teaching]
+    bullets:
+      - id: gsi-b1
+        text: Delivered full lecture series on Lean Six Sigma methodologies to 50+ students and hosted weekly labs and office hours
+        importance: 2
+        tags: [teaching, leadership]
+      - id: gsi-b2
+        text: Developed lab materials and assessment tools and supported grading and student mentorship
+        importance: 2
+        tags: [education]
+
+publications:
+  - id: wei2022
+    title: "A Parametric Head Geometry Model Accounting for Variation Among Adolescent and Young Adult Populations"
+    journal: "Computer Methods and Programs in Biomedicine"
+    year: 2022
+    authors:
+      - "Wei, A."
+      - "et al."
+
+leadership:
+  - id: adp-council
+    title: "Capital One Analyst Development Program Council"
+    dates: "2023-2025"
+    bullets:
+      - "Instructed technical onboarding sessions (SQL, Python, EMP, Git/GitHub) for 300+ new analysts and interns each cycle"
+      - "Organized monthly cross-team discussions for 60+ associates and coordinated logistics for executive panels"
+  - id: recruiting
+    title: "Capital One Recruiting"
+    dates: "2023-2025"
+    bullets:
+      - "Conducted pre-interview fit calls and case preparation, and served as buddy for multiple cohorts"
+      - "Provided 60+ hours annually of recruiting support including campus visits and candidate assessment"
+
+skills: 
+  - category: "Programming Languages"
+    items:
+      - Python
+      - SQL
+      - R
+      - MATLAB
+  - category: "Tools & Frameworks"
+    items:
+      - Apache Airflow
+      - Snowflake
+      - Docker
+      - Git
+      - Tableau
+
+projects:
+  - id: citywatch
+    name: CityWatch Incident Tracker
+    dates:
+      start: 2020-01
+      end: 2020-12
+    tech-used: "Next.js | Go | PostgreSQL"
+    url: "github.com/albert--wei/citywatch"
+    bullets:
+      - text: Developed incident reporting and response coordination system; implemented analytics dashboards; deployed via Docker and GitHub Actions.
+  - id: fleetops
+    name: FleetOps Manager
+    dates:
+      start: 2002-09
+      end: 2003-03
+    tech-used: "React | TypeScript | Node.js"
+    url: "github.com/albert--wei/fleetops"
+    bullets:
+      - text: Architected centralized platform for vehicle management and telemetry dashboards.
