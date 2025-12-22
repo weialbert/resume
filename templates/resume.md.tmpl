@@ -12,10 +12,11 @@
 {% for d in e.degrees %}
 - **{{ d.degree }}** <span style="float: right;"> {{ d.start }}–{{ d.end }} </span>
 {% endfor %}
-{% if e.gpa %}<br/>*GPA: {{ e.gpa }}*
+{% if e.gpa %}
+  - GPA: {{ e.gpa }}
 {% endif %}
-{% if e.awards %}<br/>*Awards:*
-    - {{ e.awards | join('\n    - ') }}
+{% if e.awards %}
+  - Awards: {{ e.awards | join(', ') }}
 {% endif %}
 
 {% endfor %}
