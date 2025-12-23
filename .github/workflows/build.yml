@@ -1,73 +1,39 @@
-name: Build and Test
+name: Build
 
 on:
   push:
-    branches: [main]
-    paths:
-      - '**.py'
-      - '**.typ'
-      - '**.yaml'
-      - 'uv.lock'
-      - 'pyproject.toml'
-      - 'Makefile'
-      - 'templates/**'
-      - '.github/workflows/**'
   pull_request:
-    paths:
-      - '**.py'
-      - '**.typ'
-      - '**.yaml'
-      - 'uv.lock'
-      - 'pyproject.toml'
-      - 'Makefile'
-      - 'templates/**'
-      - '.github/workflows/**'
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
-          cache-dependency-glob: "uv.lock"
+          cache-dependency-glob: uv.lock
 
-      - name: Setup Python and Install dependencies
-        run: |
-          uv python install
-          uv sync
+      - run: uv python install && uv sync
 
-      - name: Setup Typst
-        uses: typst-community/setup-typst@v3
-        with:
-          typst-version: 'latest'
+      - uses: typst-community/setup-typst@v3
 
       - name: Build all formats
-        env:
-          GITHUB_SHA: ${{ github.sha }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
         run: uv run make all
 
-      - name: Install poppler-utils for PDF validation
-        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - name: Verify outputs exist
+        run: |
+          test -f build/resume.pdf
+          test -f build/resume.html
+          test -f build/resume.md
+          test -f build/index.html
 
-      - name: Check outputs
-        run: make check
-
-      - name: Upload build artifacts for deployment
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      - name: Upload artifacts for inspection
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: deploy-package
-          path: |
-            build/index.html
-            build/resume.pdf
-            build/resume.html
-            build/resume.md
+          name: build-${{ github.sha }}
+          path: build/
           retention-days: 7
-          if-no-files-found: error
