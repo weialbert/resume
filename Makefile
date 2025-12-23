@@ -34,6 +34,9 @@ html: setup build/resume.html
 
 index: build/index.html
 
+check:
+	@scripts/check_outputs.sh
+
 pdf: setup build/resume.pdf
 
 clean:
