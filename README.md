@@ -1,71 +1,76 @@
 # Resume
 
-This repository builds resumes from a single [data](data/data.yaml) file using Typst and templates for different file outputs, hosted with github pages and tested using CI with github actions.
+This repository generates templated, version-controlled resumes from a single structured [data file](data/data.yaml). Resume content is rendered using Jinja2 templates into Typst, Markdown, and HTML outputs. Output variants are controlled through configurable `profiles`, which filter and shape content to produce different resume targets, including:
 
-> [!NOTE]
-> The final resume is hosted through github pages at [weialbert.github.io/resume/](weialbert.github.io/resume/)
+- A **one-page Typst-generated PDF** for file submission  
+- **Role-specific resumes** that include only bullet points matching selected tags or criteria  
+- A **complete HTML resume** optimized for quick copying into online application forms  
 
-The resume homepage contains data formatted for several different outputs:
-| Format | Description|
-| --- | ---| 
-| `pdf` | A **one-page** summary ready for download and file submission purposes|
-| `html`| An extended resume containing all information for quick **copying utility**, helpful for filling in application boxes |
-| `markdown` | Extended source code for reference use| 
+> [!NOTE]  
+> The live resume is hosted on GitHub Pages and can be viewed here:  
+> https://weialbert.github.io/resume/
 
-## Quick start
+## Outputs
 
-### Prerequisites:
+All outputs are derived from the same underlying data and rendered via profile-specific templates:
+
+| Format | Description |
+| :---: | --- |
+| `pdf` | A **one-page** PDF rendered via Typst, suitable for applications and submissions |
+| `html` | A full resume rendered for the web, optimized for **copying and pasting** |
+| `markdown` | The extended resume rendered as Markdown for reference or reuse |
+
+## Quick Start
+
+### Prerequisites
+
 - Python 3.11+ (or system Python)
-- typst (https://typst.org) or installable via Rust/Cargo
+- Typst ([typst.org](https://typst.org)), installable directly or via Rust/Cargo
 
-### Install Python deps:
+### Install Python dependencies
 
 ```bash
 # Install uv (recommended) and sync dependencies from pyproject.toml
 python -m pip install --user uv
 uv sync
 ```
-
-### Build (all):
-
+### Build all outputs
 ```bash
 uv run make
 ```
-
-### Build only markdown or PDF:
-
+### Build specific outputs
 ```bash
 uv run make md
 uv run make pdf
 ```
-
 ### Watch for changes
-
+Automatically rebuild when data, templates, or scripts change.
 ```bash
-# Rebuild automatically when templates, data, or scripts change
-# Requires a watcher: install watchexec (recommended)
+# Requires a file watcher (watchexec recommended)
 make watch
 # or
 uv run make watch
 ```
+## Customization
+### Editing resume data
+All resume content is managed in a single file: data/data.yaml. You can update or add information in the following sections:
 
-## Making changes
+|Section	| Description |
+|:---:|---|
+|`profiles`|	Defines output-specific profiles. The PDF uses the onepage profile, which filters bullets by tag and importance, and enforces a max_bullets limit|
+|`personal`|	Name, email, location, GitHub, and social links|
+|`education`|	Degrees, institutions, graduation dates, GPA, and academic honors|
+|`experience`|	Work history including roles, companies, dates, and key accomplishments|
+|`publications`|	Papers, articles, blog posts, or research with titles, venues, and dates|
+|`leadership`|	Leadership positions, organizations, dates, and impact|
+|`projects`|	Personal, academic, or professional projects with descriptions and technologies|
+|`skills`|	Technical skills, tools, languages, frameworks, and relevant soft skills|
 
-### Adding data
-Updating or inserting data points into the resume can be easily made by modifying the [data](data/data.yaml) file. The following sections can be altered:
-| Section | Description |
-| --- | --- |
-|`profiles`| Set profiles for each output type.git  The PDF output uses the `onepage` profile which filters bullet points for each experience by `tag` and `importanace` labels, alongside a `max_bullets` amount| 
-|`personal`| Add details such as name, email, location, github, social media accounts|
-|`education`| Add relevant degrees, institutions, graduation dates, GPA, and academic awards|
-|`experience`| Add professional experience including job titles, companies, dates, and key responsibilities or achievements|
-|`publications`| Add published papers, articles, blog posts, or research work with titles, venues, and dates|
-|`leadership`| Add leadership roles, organizations, dates, and examples of impact or responsibilities|
-|`projects`| Add notable personal, academic, or professional projects with brief descriptions and technologies used|
-|`skills`| Add technical skills, tools, programming languages, frameworks, and relevant soft skills|
+## Continuous Integration
+On every push, workflows defined in .github/workflows/ run automatically to ensure correctness and consistency:
 
-## CI checks
-Every time changes are pushed, workflows in the `.github/workflows/` are automatically deployed. These ensure:
-    
-1. Outputs build successfully. CI checks will fail if the data is entered erroneously and outputs do not build. The github page will retain the last successfully built copies.
-2. Outputs respect their profiles. For example, the PDF output must be exactly 1 page. Adding too many bullets without appropriate filtering (`tags`, `importance` level, `max_bullets`) or changing the profile of the PDF output can cause failure.
+### Successful builds
+All outputs must build without errors. Invalid or malformed data will cause CI failures, and GitHub Pages will continue serving the most recent successful build.
+
+### Profile compliance
+Outputs must conform to their defined profiles. For example, the PDF must remain exactly one page. Exceeding limits (such as too many bullets without proper filtering by tags, importance, or max_bullets) or modifying the PDF profile incorrectly will cause CI to fail.
