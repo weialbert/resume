@@ -11,8 +11,9 @@ build/resume.md: $(DATA_FILE) templates/resume.md.j2 src/render.py
 build/resume.html: $(DATA_FILE) templates/resume.html.j2 src/render.py
 	$(RENDER) --format html --output $@
 
-build/index.html: $(DATA_FILE) templates/index.html.j2 src/render.py
+build/index.html: $(DATA_FILE) templates/index.html.j2 static/css/style.css src/render.py
 	$(RENDER) --format index --output $@
+	cp static/css/style.css build/style.css
 
 build/resume.typ: $(DATA_FILE) templates/resume.typ.j2 src/render.py
 	$(RENDER) --profile $(PROFILE) --format typst --output $@
