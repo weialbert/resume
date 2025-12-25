@@ -8,7 +8,7 @@ This repository generates templated, version-controlled resumes from a single st
 
 > [!NOTE]  
 > The live resume is hosted on GitHub Pages and can be viewed here:  
-> https://weialbert.github.io/resume/
+> https://weialbert.github.io/
 
 ## Outputs
 
