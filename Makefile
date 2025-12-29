@@ -41,7 +41,7 @@ check:
 pdf: setup build/resume.pdf
 
 clean:
-	rm -rf build/*.md build/*.html build/*.typ build/*.pdf .setup-done resume.egg-info
+	rm -rf build/* .setup-done resume.egg-info
 
 watch:
 	while true; do $(MAKE) -q || $(MAKE); sleep 0.5; done
