@@ -6,45 +6,37 @@
 {% if personal.github %} - https://{{ personal.github }}{% endif %}
 {% if personal.portfolio %} - https://{{ personal.portfolio }}{% endif %}
 
+## Education
+{% for e in education %}
+### {{ e.institution }} <span style="float: right;"> {{ e.location }} </span> 
+{% for d in e.degrees %}
+- **{{ d.degree }}** <span style="float: right;"> {{ d.start }}–{{ d.end }} </span>
+{% endfor %}
+{% if e.gpa %}
+  - GPA: {{ e.gpa }}
+{% endif %}
+{% if e.awards %}
+  - Awards: {{ e.awards | join(', ') }}
+{% endif %}
 
-## Technical Skills
-
-{% for s in skills %}- *{{ s.category }}*: {{ s['items'] | join(', ') }}
 {% endfor %}
 
+## Experience
+{% for exp in experiences %}### {{ exp.company }}{% if exp.location %} – *{{ exp.location }}*{% endif %}
+**{{ exp.role }}** {% if exp.start or exp.end %}<span style="float: right;"> ({{ exp.start }}–{{ exp.end }}) </span>{% endif %}
+{% for b in exp.bullets %}- {{ b.text }}
+{% endfor %}
+{% endfor %}
 
 ## Projects
-
 {% for p in projects %}### {{ p.name }}{% if p.url %} — [{{ p.url }}](https://{{ p.url }}){% endif %}
-{% if p.dates %}{% if p.dates.start or p.dates.end %}{{ p.dates.start }}{% if p.dates.end %}–{{ p.dates.end }}{% endif %}{% endif %}{% endif %}
+{% if p.dates %}{% if p.dates.start or p.dates.end %}<span style="float: right;"> {{ p.dates.start }}{% if p.dates.end %}–{{ p.dates.end }}{% endif %} </span>{% endif %}{% endif %}
 {% if p['tech-used'] %}*{{ p['tech-used'] }}*
 {% endif %}
 {% for b in p.bullets %}- {{ b.text }}
 {% endfor %}
-
 {% endfor %}
 
-
-## Education
-
-{% for e in education %}### {{ e.institution }} — {{ e.location }}
-{% if e.gpa %}*{{ e.gpa }}*
-{% endif %}
-{% for d in e.degrees %}- **{{ d.degree }}** ({{ d.start }}–{{ d.end }})
+## Technical Skills
+{% for s in skills %}- *{{ s.category }}*: {{ s['items'] | join(', ') }}
 {% endfor %}
-{% if e.awards %}Awards: {{ e.awards | join(', ') }}
-{% endif %}
-
-{% endfor %}
-
-
-## Experience
-
-{% for exp in experiences %}### {{ exp.company }}{% if exp.location %} – *{{ exp.location }}*{% endif %}
-**{{ exp.role }}** {% if exp.start or exp.end %} ({{ exp.start }}–{{ exp.end }}){% endif %}
-
-{% for b in exp.bullets %}- {{ b.text }}
-{% endfor %}
-
-{% endfor %}
-
