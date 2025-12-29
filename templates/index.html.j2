@@ -32,7 +32,7 @@
         <p>
           {% for key, value in contact.items() %}
             {% if key in contact_keys and value %}
-              <a href="{% if key == 'email' %}mailto:{% endif %}{{ value }}"
+              <a href="{% if key == 'email' %}mailto:{% else %}https://{% endif %}{{ value }}"
                  class="footer-link">{{ key|title }}</a>
             {% endif %}
           {% endfor %}
