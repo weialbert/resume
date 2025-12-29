@@ -1,102 +1,39 @@
-name: Build and Test
+name: Build
 
 on:
   push:
-    branches: [main]
-    paths:
-      - '**.py'
-      - '**.typ'
-      - 'uv.lock'
-      - 'pyproject.toml'
-      - 'Makefile'
-      - '.github/workflows/**'
   pull_request:
-    paths:
-      - '**.py'
-      - '**.typ'
-      - 'uv.lock'
-      - 'pyproject.toml'
-      - 'Makefile'
-      - '.github/workflows/**'
-
-permissions:
-  contents: write
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
-          cache-dependency-glob: "uv.lock"
+          cache-dependency-glob: uv.lock
 
-      - name: Setup Python and Install dependencies
-        run: |
-          uv python install
-          uv sync
+      - run: uv python install && uv sync
 
-      - name: Setup Typst
-        uses: typst-community/setup-typst@v3
-        with:
-          typst-version: 'latest'
+      - uses: typst-community/setup-typst@v3
 
       - name: Build all formats
         run: uv run make all
 
-      - name: Install poppler-utils for PDF validation
-        run: sudo apt-get update && sudo apt-get install -y poppler-utils
-
-      - name: Check outputs
-        run: make check
-
-      - name: Create release tag on main
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        id: create_release
+      - name: Verify outputs exist
         run: |
-          TAG_NAME="v$(date +%Y.%m.%d-%H%M%S)"
-          echo "tag=${TAG_NAME}" >> $GITHUB_OUTPUT
-          
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          git tag -a "${TAG_NAME}" -m "Resume build $(date +%Y-%m-%d\ %H:%M:%S)"
-          git push origin "${TAG_NAME}"
+          test -f build/resume.pdf
+          test -f build/resume.html
+          test -f build/resume.md
+          test -f build/index.html
 
-      - name: Create GitHub Release
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.create_release.outputs.tag }}
-          name: Resume ${{ steps.create_release.outputs.tag }}
-          body: |
-            Resume build from commit ${{ github.sha }}
-            
-            Download the latest version of my resume in multiple formats.
-          files: |
-            build/resume.pdf
-            build/resume.html
-            build/resume.md
-          draft: false
-          prerelease: false
-          fail_on_unmatched_files: true
-
-      - name: Upload build artifacts for deployment
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      - name: Upload artifacts for inspection
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: deploy-package
-          path: |
-            build/index.html
-            build/resume.pdf
-            build/resume.html
-            build/resume.md
-          retention-days: 1
-          if-no-files-found: error
+          name: build-${{ github.sha }}
+          path: build/
+          retention-days: 7
