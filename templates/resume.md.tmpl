@@ -1,6 +1,10 @@
 # {{ personal.name }}
-
-{{ personal.location }}{% if personal.email %} • {{ personal.email }}{% endif %}{% if personal.phone %} • {{ personal.phone }}{% endif %}{% if personal.linkedin %} • https://{{ personal.linkedin }}{% endif %}{% if personal.github %} • https://{{ personal.github }}{% endif %}{% if personal.portfolio %} • https://{{ personal.portfolio }}{% endif %}
+{% if personal.location %} - {{ personal.location }}{% endif %}
+{% if personal.email %} - {{ personal.email }}{% endif %}
+{% if personal.phone %} - {{ personal.phone }}{% endif %}
+{% if personal.linkedin %} - https://{{ personal.linkedin }}{% endif %}
+{% if personal.github %} - https://{{ personal.github }}{% endif %}
+{% if personal.portfolio %} - https://{{ personal.portfolio }}{% endif %}
 
 
 ## Technical Skills
@@ -24,7 +28,12 @@
 ## Education
 
 {% for e in education %}### {{ e.institution }} — {{ e.location }}
-**{{ e.degree }}** ({{ e.start }}–{{ e.end }})
+{% if e.gpa %}*{{ e.gpa }}*
+{% endif %}
+{% for d in e.degrees %}- **{{ d.degree }}** ({{ d.start }}–{{ d.end }})
+{% endfor %}
+{% if e.awards %}Awards: {{ e.awards | join(', ') }}
+{% endif %}
 
 {% endfor %}
 

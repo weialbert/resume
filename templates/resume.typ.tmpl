@@ -251,9 +251,15 @@
 #edu(
   institution: "{{ e.institution }}",
   location: "{{ e.location }}",
-  degree: "{{ e.degree }}",
-  dates: dates-util(start-date: "{{ e.start }}", end-date: "{{ e.end }}"),
+  degree: "{% for d in e.degrees %}{{ d.degree }}{% if not loop.last %} / {% endif %}{% endfor %}",
+  dates: dates-util(start-date: "{{ e.degrees[0].start }}", end-date: "{{ e.degrees[-1].end }}"),
 )
+{% if e.gpa %}
+- *{{ e.gpa }}*
+{% endif %}
+{% if e.awards %}
+- Awards: {{ e.awards | join(', ') }}
+{% endif %}
 {% endfor %}
 
 == Experience

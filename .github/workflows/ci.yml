@@ -40,3 +40,9 @@ jobs:
 
       - name: Check PDF exists
         run: test -f build/resume.pdf
+
+      - name: Upload resume PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-pdf
+          path: build/resume.pdf

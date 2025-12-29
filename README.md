@@ -49,6 +49,21 @@ uv run make md
 uv run make pdf
 ```
 
+Watch for changes
+
+```bash
+# Rebuild automatically when templates, data, or scripts change
+# Requires a watcher: install **watchexec** (recommended) or **fswatch** / **entr**
+make watch
+# or explicitly use uv-runner if you prefer:
+uv run make watch
+```
+
+Notes
+
+- On macOS, `brew install watchexec` is recommended for reliable cross-platform watching.
+- `fswatch` or `entr` also work if you already have them installed.
+
 Notes
 
 - The Makefile will attempt to install Python deps to the user site if they are missing.
