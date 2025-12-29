@@ -123,7 +123,7 @@ def get_build_info() -> dict[str, Any]:
 
     return {
         "tag": tag,
-        "date": datetime.now(ZoneInfo("US/Eastern")).strftime("%Y-%m-%d %H:%M UTC"),
+        "date": datetime.now(ZoneInfo("US/Eastern")).strftime("%Y-%m-%d %H:%M EST"),
         "commit_short": commit_short,
         "commit_url": f"https://github.com/{repo}/commit/{commit}",
         "release_url": f"https://github.com/{repo}/releases/tag/{tag}" if tag != "dev" else f"https://github.com/{repo}",
