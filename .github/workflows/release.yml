@@ -10,6 +10,10 @@ permissions:
   contents: write
   actions: read
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -26,8 +30,8 @@ jobs:
         run: |
           set -euo pipefail
           
-          CURRENT=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
-          PREV=$(git show HEAD^:pyproject.toml 2>/dev/null | grep '^version = ' | cut -d'"' -f2 || echo "")
+          CURRENT=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])" 2>/dev/null || grep '^version = ' pyproject.toml | cut -d'"' -f2)
+          PREV=$(git show HEAD^:pyproject.toml 2>/dev/null | python3 -c "import tomllib, sys; print(tomllib.load(sys.stdin.buffer)['project']['version'])" 2>/dev/null || git show HEAD^:pyproject.toml 2>/dev/null | grep '^version = ' | cut -d'"' -f2 || echo "")
           
           if [[ -n "$CURRENT" && "$CURRENT" != "$PREV" ]]; then
             echo "tag=v$CURRENT" >> "$GITHUB_OUTPUT"
@@ -47,31 +51,13 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           path: build/
 
-      - name: Create or update tag
+      - name: Verify artifacts
         if: steps.version.outputs.changed == 'true'
         run: |
-          set -euo pipefail
-          
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          TAG="${{ steps.version.outputs.tag }}"
-          
-          # Fetch all tags
-          git fetch --tags --force
-          
-          # Delete existing tag if present
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Updating existing tag $TAG"
-            git tag -d "$TAG"
-            git push origin ":refs/tags/$TAG" 2>/dev/null || true
-          else
-            echo "Creating new tag $TAG"
-          fi
-          
-          # Create and push new tag
-          git tag -a "$TAG" -m "Release $TAG"
-          git push origin "$TAG"
+          for file in build/resume.{pdf,html,md}; do
+            [[ -f "$file" ]] || { echo "Missing: $file"; exit 1; }
+          done
+          ls -lh build/
 
       - name: Create or update GitHub Release
         if: steps.version.outputs.changed == 'true'
