@@ -1,0 +1,11 @@
+# Git LFS configuration for carousel images
+static/images/*.jpg filter=lfs diff=lfs merge=lfs -text
+static/images/*.jpeg filter=lfs diff=lfs merge=lfs -text
+static/images/*.png filter=lfs diff=lfs merge=lfs -text
+static/images/*.gif filter=lfs diff=lfs merge=lfs -text
+static/images/*.webp filter=lfs diff=lfs merge=lfs -text
+static/images/*.mp4 filter=lfs diff=lfs merge=lfs -text
+static/images/*.webm filter=lfs diff=lfs merge=lfs -text
+
+# Manifest file for carousel (track normally)
+static/images/manifest.json diff=lfs merge=lfs -text
