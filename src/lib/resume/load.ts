@@ -18,11 +18,24 @@ export async function loadResumeData(): Promise<Resume> {
 
     // Use project root (cwd during build)
     const projectRoot = cwd();
-    const yamlPath = join(projectRoot, 'src', 'data', 'resume.yaml');
+    const resumeYamlPath = join(projectRoot, 'src', 'data', 'resume.yaml');
+    const profilesYamlPath = join(projectRoot, 'src', 'data', 'profiles.yaml');
     
-    const yamlContent = readFileSync(yamlPath, 'utf-8');
-    const resumeData = YAML.parse(yamlContent);
-    return validateResume(resumeData);
+    // Load resume and profiles
+    const resumeContent = readFileSync(resumeYamlPath, 'utf-8');
+    const profilesContent = readFileSync(profilesYamlPath, 'utf-8');
+    
+    const resumeData = YAML.parse(resumeContent);
+    const profilesData = YAML.parse(profilesContent);
+    
+    // Merge profiles and config into resume data
+    const mergedData = {
+      ...resumeData,
+      profiles: profilesData.profiles,
+      config: profilesData.config,
+    };
+    
+    return validateResume(mergedData);
   } catch (error) {
     if (error instanceof ValidationError) {
       throw error;
