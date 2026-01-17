@@ -1,6 +1,6 @@
 [project]
 name = "resume"
-version = "0.1.5"
+version = "0.1.6"
 description = "Resume generator using Typst and Jinja templates"
 readme = "README.md"
 requires-python = ">=3.11"
