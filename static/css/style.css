@@ -27,7 +27,24 @@ body::before {
   background-position: center;
   background-image: var(--carousel-bg);
   z-index: -1;
-  transition: background-image 0.8s ease-in-out;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 100%;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-image: var(--carousel-next);
+  z-index: -1;
+  transition: left 0.8s ease-in-out;
+}
+
+body.carousel-slide::after {
+  left: 0;
 }
 
 body.carousel-ready::before {

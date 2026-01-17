@@ -60,11 +60,21 @@ class BackgroundCarousel {
   }
 
   /**
-   * Set the background image
+   * Set the background image with slide animation
    */
   setBackground(imagePath) {
     const escapedPath = imagePath.replace(/'/g, "\\'");
-    document.body.style.setProperty('--carousel-bg', `url('${escapedPath}')`);
+    // Set the next image
+    document.body.style.setProperty('--carousel-next', `url('${escapedPath}')`);
+    
+    // Trigger slide animation
+    document.body.classList.add('carousel-slide');
+    
+    // After animation, update main background and reset
+    setTimeout(() => {
+      document.body.style.setProperty('--carousel-bg', `url('${escapedPath}')`);
+      document.body.classList.remove('carousel-slide');
+    }, 800);
   }
 
   /**
