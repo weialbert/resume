@@ -64,7 +64,7 @@ class BackgroundCarousel {
    */
   setBackground(imagePath) {
     const escapedPath = imagePath.replace(/'/g, "\\'");
-    document.body.style.backgroundImage = `url('${escapedPath}')`;
+    document.body.style.setProperty('--carousel-bg', `url('${escapedPath}')`);
   }
 
   /**
