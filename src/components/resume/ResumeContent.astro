@@ -1,0 +1,477 @@
+---
+import { loadResumeData, applyProfile } from '../../lib/resume';
+import '../../styles/resume-print.css';
+
+interface Props {
+  profile?: string;
+  variant?: 'html' | 'pdf';
+}
+
+const { profile = 'default', variant = 'html' } = Astro.props;
+
+// Load and filter resume data
+const fullResume = await loadResumeData();
+const resume = applyProfile(fullResume, profile);
+const { personal, education, experiences, skills, publications, leadership, projects } = resume;
+---
+
+<div class={`resume resume--${profile} resume--${variant}`}>
+  <!-- Header with personal info -->
+  <header class="resume__header">
+    <h1 class="resume__name">{personal.name}</h1>
+    <div class="resume__contact">
+      {personal.location && <span class="contact-item">{personal.location}</span>}
+      {personal.phone && <span class="contact-item">{personal.phone}</span>}
+      {personal.email && (
+        <a href={`mailto:${personal.email}`} class="contact-item">{personal.email}</a>
+      )}
+      {personal.github && (
+        <a href={`https://${personal.github}`} class="contact-item">{personal.github}</a>
+      )}
+      {personal.linkedin && (
+        <a href={`https://${personal.linkedin}`} class="contact-item">{personal.linkedin}</a>
+      )}
+      {personal.portfolio && (
+        <a href={`https://${personal.portfolio}`} class="contact-item">{personal.portfolio}</a>
+      )}
+    </div>
+  </header>
+
+  <!-- Education Section -->
+  {education && education.length > 0 && (
+    <section class="resume__section" id="education">
+      <h2 class="resume__section-title">Education</h2>
+      <div class="resume__section-content">
+        {education.map((edu) => (
+          <div class="education-item">
+            <div class="education-header">
+              <h3 class="education-institution">{edu.institution}</h3>
+              <span class="education-location">{edu.location}</span>
+            </div>
+            {edu.degrees.map((degree) => (
+              <div class="education-degree">
+                <div class="degree-info">
+                  <span class="degree-name">{degree.degree}</span>
+                  <span class="degree-dates">
+                    {degree.start} – {degree.end}
+                  </span>
+                </div>
+                {degree.gpa && <span class="degree-gpa">GPA: {degree.gpa}</span>}
+              </div>
+            ))}
+            {edu.awards && edu.awards.length > 0 && (
+              <div class="education-awards">
+                <strong>Awards:</strong> {edu.awards.join(', ')}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Experience Section -->
+  {experiences && experiences.length > 0 && (
+    <section class="resume__section" id="experience">
+      <h2 class="resume__section-title">Experience</h2>
+      <div class="resume__section-content">
+        {experiences.map((exp) => (
+          <div class="experience-item">
+            <div class="experience-header">
+              <div>
+                <h3 class="experience-company">{exp.company}</h3>
+                <span class="experience-role">{exp.role}</span>
+              </div>
+              <div class="experience-meta">
+                <span class="experience-location">{exp.location}</span>
+                <span class="experience-dates">
+                  {exp.start} – {exp.end === 'present' ? 'Present' : exp.end}
+                </span>
+              </div>
+            </div>
+            {exp['tech-used'] && (
+              <p class="experience-tech">
+                <strong>Tech:</strong> {exp['tech-used']}
+              </p>
+            )}
+            {exp.bullets && exp.bullets.length > 0 && (
+              <ul class="experience-bullets">
+                {exp.bullets.map((bullet) => (
+                  <li class="bullet" key={bullet.id}>
+                    {bullet.text}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Projects Section -->
+  {projects && projects.length > 0 && (
+    <section class="resume__section" id="projects">
+      <h2 class="resume__section-title">Projects</h2>
+      <div class="resume__section-content">
+        {projects.map((project) => (
+          <div class="project-item">
+            <div class="project-header">
+              <h3 class="project-name">{project.name}</h3>
+              {project.url && (
+                <a href={`https://${project.url}`} class="project-url">
+                  {project.url}
+                </a>
+              )}
+            </div>
+            <div class="project-meta">
+              <span class="project-dates">
+                {project.dates.start} – {project.dates.end}
+              </span>
+              {project['tech-used'] && (
+                <span class="project-tech">{project['tech-used']}</span>
+              )}
+            </div>
+            {project.bullets && project.bullets.length > 0 && (
+              <ul class="project-bullets">
+                {project.bullets.map((bullet, idx) => (
+                  <li key={idx} class="bullet">
+                    {bullet.text}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Publications Section -->
+  {publications && publications.length > 0 && (
+    <section class="resume__section" id="publications">
+      <h2 class="resume__section-title">Publications</h2>
+      <div class="resume__section-content">
+        {publications.map((pub) => (
+          <div class="publication-item">
+            <p class="publication-text">
+              <strong>{pub.title}</strong>, {pub.authors.join(', ')}, <em>{pub.journal}</em> ({pub.year})
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Skills Section -->
+  {skills && skills.length > 0 && (
+    <section class="resume__section" id="skills">
+      <h2 class="resume__section-title">Technical Skills</h2>
+      <div class="resume__section-content">
+        {skills.map((skillGroup) => (
+          <div class="skill-group">
+            <h4 class="skill-category">{skillGroup.category}</h4>
+            <p class="skill-items">{skillGroup.items.join(', ')}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Leadership Section -->
+  {leadership && leadership.length > 0 && (
+    <section class="resume__section" id="leadership">
+      <h2 class="resume__section-title">Leadership</h2>
+      <div class="resume__section-content">
+        {leadership.map((lead) => (
+          <div class="leadership-item">
+            <div class="leadership-header">
+              <h3 class="leadership-title">{lead.title}</h3>
+              <span class="leadership-dates">{lead.dates}</span>
+            </div>
+            {lead.bullets && lead.bullets.length > 0 && (
+              <ul class="leadership-bullets">
+                {lead.bullets.map((bullet, idx) => (
+                  <li key={idx} class="bullet">
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+</div>
+
+<style>
+  .resume {
+    max-width: 8.5in;
+    margin: 0 auto;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #000;
+  }
+
+  .resume__header {
+    text-align: center;
+    margin-bottom: 1em;
+  }
+
+  .resume__name {
+    font-size: 24pt;
+    font-weight: bold;
+    margin: 0 0 0.25em 0;
+  }
+
+  .resume__contact {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    font-size: 10pt;
+  }
+
+  .contact-item {
+    text-decoration: none;
+    color: #000080;
+  }
+
+  .contact-item:hover {
+    text-decoration: underline;
+  }
+
+  .resume__section {
+    margin-bottom: 1em;
+  }
+
+  .resume__section-title {
+    font-size: 12pt;
+    font-weight: bold;
+    border-bottom: 1pt solid #000;
+    margin: 0.5em 0 0.3em 0;
+    padding-bottom: 0.2em;
+  }
+
+  .resume__section-content {
+    font-size: 10pt;
+  }
+
+  /* Education Styles */
+  .education-item {
+    margin-bottom: 0.5em;
+  }
+
+  .education-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+  }
+
+  .education-institution {
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .education-location {
+    font-style: italic;
+    font-size: 10pt;
+  }
+
+  .education-degree {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    margin-top: 0.2em;
+    font-size: 10pt;
+  }
+
+  .degree-info {
+    flex: 1;
+  }
+
+  .degree-name {
+    display: block;
+  }
+
+  .degree-dates {
+    display: block;
+    font-size: 9pt;
+  }
+
+  .degree-gpa {
+    font-size: 9pt;
+  }
+
+  .education-awards {
+    font-size: 10pt;
+    margin-top: 0.2em;
+  }
+
+  /* Experience Styles */
+  .experience-item {
+    margin-bottom: 0.5em;
+    page-break-inside: avoid;
+  }
+
+  .experience-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: 0.2em;
+  }
+
+  .experience-company {
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .experience-role {
+    display: block;
+    font-size: 10pt;
+  }
+
+  .experience-meta {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    font-size: 10pt;
+  }
+
+  .experience-location {
+    font-style: italic;
+    font-size: 9pt;
+  }
+
+  .experience-dates {
+    font-size: 9pt;
+  }
+
+  .experience-tech {
+    margin: 0.2em 0;
+    font-size: 10pt;
+  }
+
+  .experience-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0.3em 0 0 1.5em;
+  }
+
+  .bullet {
+    margin-bottom: 0.2em;
+    font-size: 10pt;
+  }
+
+  /* Skills Styles */
+  .skill-group {
+    margin-bottom: 0.3em;
+  }
+
+  .skill-category {
+    font-weight: bold;
+    margin: 0;
+    font-size: 10pt;
+  }
+
+  .skill-items {
+    margin: 0.1em 0 0 1.5em;
+    font-size: 10pt;
+  }
+
+  /* Projects Styles */
+  .project-item {
+    margin-bottom: 0.5em;
+    page-break-inside: avoid;
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: 0.2em;
+  }
+
+  .project-name {
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .project-url {
+    color: #000080;
+    text-decoration: none;
+    font-size: 10pt;
+  }
+
+  .project-url:hover {
+    text-decoration: underline;
+  }
+
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    font-size: 9pt;
+    margin-bottom: 0.2em;
+  }
+
+  .project-dates {
+    flex: 1;
+  }
+
+  .project-tech {
+    flex: 1;
+    text-align: right;
+  }
+
+  .project-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0.2em 0 0 1.5em;
+  }
+
+  /* Publications Styles */
+  .publication-item {
+    margin-bottom: 0.3em;
+    font-size: 10pt;
+  }
+
+  .publication-text {
+    margin: 0;
+  }
+
+  /* Leadership Styles */
+  .leadership-item {
+    margin-bottom: 0.5em;
+    page-break-inside: avoid;
+  }
+
+  .leadership-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: 0.2em;
+  }
+
+  .leadership-title {
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .leadership-dates {
+    font-size: 10pt;
+    font-style: italic;
+  }
+
+  .leadership-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0.2em 0 0 1.5em;
+  }
+</style>

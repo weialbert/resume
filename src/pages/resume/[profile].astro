@@ -1,0 +1,123 @@
+---
+import MySiteLayout from '../../layouts/BaseLayout.astro';
+import ResumeContent from '../../components/resume/ResumeContent.astro';
+import { getAvailableProfiles } from '../../lib/resume/load';
+import { PDF_FILENAMES } from '../../lib/resume/constants';
+
+export async function getStaticPaths() {
+  const profiles = await getAvailableProfiles();
+  return profiles.map((profile) => ({
+    params: { profile },
+  }));
+}
+
+interface Props {
+  profile: string;
+}
+
+const { profile } = Astro.params;
+
+if (!profile) {
+  throw new Error('Profile parameter is required');
+}
+---
+
+<MySiteLayout title={`Albert Wei Resume - ${profile} Profile`}>
+  <div class="resume-page">
+    <div class="resume-header">
+      <h2>Resume - {profile.charAt(0).toUpperCase() + profile.slice(1)} Profile</h2>
+      <div class="download-section">
+        {PDF_FILENAMES[profile] && (
+          <a href={`/resumes/${PDF_FILENAMES[profile]}`} class="download-btn" download>
+            📥 Download PDF
+          </a>
+        )}
+        <a href="/resume" class="back-btn">
+          ← Back to Main Resume
+        </a>
+      </div>
+    </div>
+
+    <!-- Render the selected profile -->
+    <div class="resume-content">
+      <ResumeContent profile={profile} />
+    </div>
+  </div>
+</MySiteLayout>
+
+<style>
+  .resume-page {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .resume-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .resume-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .download-section {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .download-btn,
+  .back-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .download-btn {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .download-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .back-btn {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .back-btn:hover {
+    background-color: #5a6268;
+  }
+
+  .resume-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .resume-header h2 {
+      font-size: 2rem;
+    }
+
+    .download-section {
+      flex-direction: column;
+    }
+
+    .download-btn,
+    .back-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

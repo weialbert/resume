@@ -1,6 +1,89 @@
 ---
 import MySiteLayout from '../layouts/BaseLayout.astro';
+import ResumeContent from '../components/resume/ResumeContent.astro';
+import { PDF_FILENAMES } from '../lib/resume/constants';
 ---
+
 <MySiteLayout title="Albert Wei Resume">
-  <p>My page content, wrapped in a layout!</p>
+  <div class="resume-page">
+    <div class="resume-header">
+      <h2>Resume</h2>
+      <div class="download-section">
+        <a href={`/resumes/${PDF_FILENAMES.default}`} class="download-btn" download>
+          📥 Download Full Resume (PDF)
+        </a>
+        <a href={`/resumes/${PDF_FILENAMES.onepage}`} class="download-btn" download>
+          📥 Download One-Page Resume (PDF)
+        </a>
+      </div>
+    </div>
+
+    <!-- Render the default profile -->
+    <div class="resume-content">
+      <ResumeContent profile="default" />
+    </div>
+  </div>
 </MySiteLayout>
+
+<style>
+  .resume-page {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .resume-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .resume-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .download-section {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .download-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .download-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .resume-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .resume-header h2 {
+      font-size: 2rem;
+    }
+
+    .download-section {
+      flex-direction: column;
+    }
+
+    .download-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
