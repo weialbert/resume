@@ -1,6 +1,47 @@
 ---
-import MySiteLayout from '../layouts/BaseLayout.astro';
+// src/pages/resume.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const profiles = [
+  {
+    name: "default",
+    label: "Full Resume",
+    description: "Complete work history with all details",
+  },
+  {
+    name: "onepage",
+    label: "One Page Resume",
+    description: "Condensed version highlighting key achievements",
+  },
+];
 ---
-<MySiteLayout title="Albert Wei Resume">
-  <p>My page content, wrapped in a layout!</p>
-</MySiteLayout>
+
+<BaseLayout title="Resume">
+  <div class="resume-page">
+    <header class="page-header">
+      <p>Download my resume in different formats</p>
+    </header>
+
+    <div class="resume-grid">
+      {
+        profiles.map(({ name, label, description }) => (
+          <article class="profile-card">
+            <h2>{label}</h2>
+            <p class="description">{description}</p>
+
+            <div class="download-links">
+              <a href={`/resume/${name}/resume.pdf`} target="_blank">
+                {" "}
+                View PDF{" "}
+              </a>
+              <a href={`/resume/${name}/resume.typ`} target="_blank">
+                {" "}
+                Source{" "}
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
